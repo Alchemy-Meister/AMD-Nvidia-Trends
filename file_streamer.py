@@ -56,5 +56,5 @@ if __name__ == '__main__':
     auth.set_access_token(USER_TOKEN, USER_SECRET)
     listener = StdOutListener()
     stream = Stream(auth, listener)
-    stream.filter(track=["AMD","Amd", "amd", "NVIDIA", "Nvidia", "nvidia", "VR", "vr", "Virtual Reality", "virtualreality", "polaris", "vega", "maxwell", "pascal", "deep learning", "gddr5x", "hbm2"])
+    stream.filter(track=["AMD","Amd", "amd", "NVIDIA", "Nvidia", "nvidia", "VR", "vr", "Virtual Reality", "virtualreality", "polaris", "vega", "maxwell", "pascal", "deep learning", "gddr5x", "hbm2", "drivers", "driver"])
     print 'Done'

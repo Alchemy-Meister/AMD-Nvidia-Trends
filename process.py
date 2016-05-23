@@ -5,11 +5,9 @@ for filename in glob.iglob('./tweets/*.txt.gz'):
         file_content = file_content.split('\n')
         if len(file_content) > 1:
             del file_content[-1]
-            string_content = '{ "tweets": ['
+            string_content = ''
             for tweet in file_content:
-                string_content = string_content + tweet + ','
-            string_content = string_content[:-1] + ']}'
-            parsed = json.loads(string_content)
+                string_content = string_content + tweet + '\n'
             
-            with open('./corpus_new/all-tweets.json', 'w') as outfile:
-                outfile.write(json.dumps(parsed, indent=4, sort_keys=True))
+            with open('./tweets/all-tweets.json', 'w') as outfile:
+                outfile.write(string_content)
