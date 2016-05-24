@@ -28,28 +28,79 @@ stop_words = (list(
 	| set(get_stop_words('turkish'))
 	| set(get_stop_words('ukrainian'))))
 
-for line in sys.stdin:
+key_words = ({'amd' : ['amd'], 
+			'nvidia': ['nvidia'], 
+			'vr': ['vr', 'virtual-reality', 'virtual' 'reality', 'virtualreality'], 
+			'polaris': ['polaris'],
+			'vega': ['vega'],
+			'maxwell': ['maxwell'],
+			'pascal': ['pascal'],
+			'dp': ['dp', 'deep-learning', 'deep', 'learning', 'deeplearning'],
+			'gddr5x' : ['gddr5x'],
+			'hbm2' : ['hbm2'],
+			'driver': ['drivers', 'driver']})
 
-	tweet = ''
-	tweet_message = ''
+def main():
+	for line in sys.stdin:
 
-        try:
-            tweet = json.loads(line)
-        except ValueError as detail:
-            sys.stderr.write(detail.__str__() + "\n")
-            continue
+		tweet = ''
+		tweet_message = ''
 
-	if 'text' in tweet:
-		tweet_message = tweet['text'].encode('utf-8')
-		tweet_message = tweet_message.lower()
+		word_found = ({'amd' : False, 
+				'nvidia': False, 
+				'vr': False, 
+				'polaris': False,
+				'vega': False,
+				'maxwell': False,
+				'pascal': False,
+				'dp': False,
+				'gddr5x' : False,
+				'hbm2' : False,
+				'driver': False})
 
-		print tweet_message
+	        try:
+	            tweet = json.loads(line)
+	        except ValueError as detail:
+	            sys.stderr.write(detail.__str__() + "\n")
+	            continue
 
-		tweet_message = re.sub(r"(^rt |https?\://\S+)", "", tweet_message)
+		if 'text' in tweet:
+			tweet_message = tweet['text'].encode('utf-8')
+			tweet_message = tweet_message.lower()
 
-		tweet_message = ''.join(ch for ch in tweet_message if ch not in exclude)
+			tweet_message = re.sub(r"(^rt |https?\://\S+)", "", tweet_message)
 
-		print tweet_message
+			tweet_message = ''.join(ch for ch in tweet_message if ch not in exclude)
 
-		for word in [w for w in tweet_message.split() if w not in stop_words]:
-			print '\t ' + word
+			for word in [w for w in tweet_message.split() if w != stop_words]:
+				for key, value in key_words.iteritems():
+					if word in value:
+						word_found[key] = True
+
+			if(word_found['amd']):
+				print key_words['amd'][0],
+				print_categories(word_found)
+			elif(word_found['nvidia']):
+				print key_words['nvidia'][0],
+				print_categories(word_found)
+			elif found_any_category(word_found):
+					print 'undefined',
+					print_categories(word_found)
+
+def found_any_category(word_found):
+	found = False
+	for key, value in word_found.iteritems():
+		if value and (key != key_words['amd'][0] and key != key_words['nvidia'][0]):
+			found = True
+			break
+
+	return found
+
+def print_categories(word_found):
+	for key, value in word_found.iteritems():
+		if value and (key != key_words['amd'][0] and key != key_words['nvidia'][0]):
+			print key_words[key][0],
+	print ''
+
+if __name__ == "__main__":
+	main()
