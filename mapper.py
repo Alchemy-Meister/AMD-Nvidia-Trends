@@ -8,8 +8,8 @@ from string import punctuation
 from stop_words import get_stop_words
 
 exclude = set(punctuation)
-stop_words = (list(set(['rt', 'fav'])
-	| set(get_stop_words('arabic'))
+stop_words = (list(
+	set(get_stop_words('arabic'))
 	| set(get_stop_words('catalan'))
 	| set(get_stop_words('danish'))
 	| set(get_stop_words('dutch'))
